@@ -1,7 +1,7 @@
 {% extends 'index.html' %}
 
 {% block site_links %}
-    <!-- <a class="button" href="{{ url_for('login') }}"><span>Login</span></a> -->
+    <a class="button" href="{{ url_for('login', _external=True) }}"><span>Login</span></a>
 {% endblock %}
 
 {% block main_content %}
@@ -38,6 +38,11 @@
 			</p>
 		{% endif %}		
 	{% else %}
+		{% with messages = get_flashed_messages() %}
+			{% for message in messages %}
+				<p>{{ message }}</p>
+			{% endfor %}
+		{% endwith %}
 		<section class="intro_content">
 			<h1>Personal Learning Journal</h1>
 			<h2>Expanding the minds of coders</h2>

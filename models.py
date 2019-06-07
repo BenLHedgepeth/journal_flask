@@ -2,7 +2,8 @@ import datetime
 
 
 from peewee import *
-import flask_bcrypt
+from flask_bcrypt import generate_password_hash
+
 
 database = SqliteDatabase(None)
 
@@ -26,12 +27,13 @@ class Writer(ModelConfig):
                 Writer.create(
                     user_name=user_name,
                     email=email,
-                    password=flask_bcypt.generate_password_hash(password)
+                    password=generate_password_hash(password)
                 )
             except IntegrityError:
                 raise ValueError
             else:
                 pass
+
 
     def write_entry(self, journal_entry):
         with database.transaction():
