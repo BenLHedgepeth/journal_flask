@@ -64,7 +64,6 @@ class RegisterView(LoginView):
   def dispatch_request(self):
     register = self.form()
     if register.validate_on_submit():
-        import pdb; pdb.set_trace()
         try:
             models.Writer.create_writer(
                 user_name = register.user_name.data,
