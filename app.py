@@ -63,24 +63,21 @@ class RegisterView(LoginView):
 
   def dispatch_request(self):
     register = self.form()
-
     if register.validate_on_submit():
-        print("Form is submitted")
+        import pdb; pdb.set_trace()
         try:
-          models.Writer.create_writer(
+            models.Writer.create_writer(
                 user_name = register.user_name.data,
                 email = register.email.data,
                 password = bcrypt.generate_password_hash(
-                      register.password.data
-                    )
+                                  register.password.data)
             )
         except ValueError:
-          flash(f"Registration failed. An active account exists. Please log in.")
-          return redirect(url_for('register'))
+            flash(f"Registration failed. An active account exists. Please log in.")
+            return redirect(url_for('register'))
         else:
-          print(f"Request status code: 302")
-          flash("Your account has been created!")
-          return redirect(url_for("home"))
+            flash("Your account has been created!")
+            return redirect(url_for("home"))
     return render_template(self.template, form=register)
 
 
@@ -108,5 +105,5 @@ class NewJournalEntryView(View):
 app.add_url_rule('/', view_func=HomeView.as_view('home'), methods=['GET'])
 app.add_url_rule('/login', view_func=LoginView.as_view('login', form=forms.LoginForm, template='login.html'), methods=['GET', 'POST'])
 app.add_url_rule('/register', view_func=RegisterView.as_view('register', form=forms.RegisterForm, template='register.html'), methods=['GET', 'POST'])
-app.add_url_rule('/entries/new', view_func=NewJournalEntryView.as_view('new_entry', form=forms.JournalForm, template='new.html'), methods=['GET', 'POST'])
+# app.add_url_rule('/entries/new', view_func=NewJournalEntryView.as_view('new_entry', form=forms.JournalForm, template='new.html'), methods=['GET', 'POST'])
 
