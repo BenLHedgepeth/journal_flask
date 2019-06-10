@@ -48,6 +48,7 @@ class LoginView(View):
         if login.validate_on_submit():
             # import pdb; pdb.set_trace()
             user = self.verify_login_credentials(login)
+
             if user:
                 login_user(user)
                 flash("Login Successful!", 'success')
@@ -64,11 +65,15 @@ class LoginView(View):
         site_member = models.Writer.get_or_none(
           models.Writer.user_name == form.user_name.data
         )
+        app.logger.debug(f"User's hashed password is: {site_member.password}")
+        app.logger.debug(f"Confirm the hash is a string: {type(site_member.password) == str}")
         if site_member:
           stored_password = site_member.password
           provided_password = form.password.data
-          # app.logger.debug(f'User hashed password retrieved: {stored_password}')
+          app.logger.debug(f"The password entered to login: '{form.password.data}'")
+
           password_accepted = bcrypt.check_password_hash(stored_password, provided_password)
+          app.logger.debug(f"generate_password_hash returns {password_accepted}")
 
           if password_accepted:
             return site_member

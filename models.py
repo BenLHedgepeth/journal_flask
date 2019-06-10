@@ -23,7 +23,7 @@ class Writer(UserMixin, ModelConfig):
 
     @classmethod
     def create_writer(cls, user_name, email, password):
-        # app.app.logger.debug("Registering a user here.")
+        app.app.logger.debug("Registering a user here. The user's password is 'secret'")
         with database.transaction():
             try:
                 Writer.create(
@@ -35,8 +35,9 @@ class Writer(UserMixin, ModelConfig):
             except IntegrityError:
                 raise ValueError
             else:
-                # me = Writer.get(Writer.user_name == 'You')
-                # app.app.logger.debug(f"Password hash assigned to user: {me.password}")
+                me = Writer.get(Writer.user_name == 'User')
+                app.app.logger.debug(f"Generated hash for the password 'secret': {me.password}")
+                app.app.logger.debug(f"The hash is a type: {type(me.password)}")
 
 
     def write_entry(self, journal_entry):
