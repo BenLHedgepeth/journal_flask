@@ -3,7 +3,7 @@ import faker
 import unittest
 import models
 
-from flask import url_for, has_app_context
+from flask import url_for
 
 import app
 
@@ -12,41 +12,58 @@ app.app.config.from_object('instance.config.TestingConfig')
 # initialize the database         
 models.database.init(app.app.config['DATABASE'])
 
+app_models = (models.Writer, models.JournalEntry, models.Tag)
+
 
 class TestCaseConfig(unittest.TestCase):
-    app_models = [models.Writer, models.JournalEntry, models.Tag]
-    models.database.bind(app_models)
 
-    def setUp(self):   
-        with models.database:
-            models.database.create_tables(self.app_models)
-        print(f'Tables created. Database is now closed {models.database.is_closed()}')
+    test_login_data = {
+        'user_name' : 'user1',
+        'password' : 'password'
+    }
 
+    test_writer = {
+        'user_name' : 'user1',
+        'email' : 'user1@email.com',
+        'password' : 'password',
+    }
+
+    test_register_data = {
+        'user_name' : 'user1',
+        'email' : 'user1@email.com',
+        'password' : 'password',
+        'confirm' : 'password'
+   }
+
+    def writer_generator(self, num=1):
+        for i in range(1, num + 1):
+            models.Writer.create_writer(
+                 user_name=f'user{i}',
+                 email=f'user{i}@email.com', 
+                 password='password'
+             )
+        return models.Writer.select()
+
+    def setUp(self):
+
+       with models.database:
+            models.database.bind(app_models)
+            models.database.create_tables(app_models)
 
     def tearDown(self):
         with models.database:
-            models.database.drop_tables(self.app_models)
+            models.database.drop_tables(app_models)
    
         
 
 class CreateWriterTestCase(TestCaseConfig):
 
-    @classmethod
-    def setUpClass(cls):
-        cls.test_writer = {
-            'user_name' : 'user1',
-            'email' : 'user1email.com',
-            'password' : app.bcrypt.generate_password_hash('password')
-        }
-
     def test_create_writer(self):
         '''Testing entity instance with new data'''
-        models.Writer.create_writer(**self.test_writer)
-        self.writer = models.Writer.select().get()
-        self.writer_entity_instances = models.Writer.select().count()
+        test_writers = self.writer_generator(1)
 
-        self.assertIsInstance(self.writer, models.Writer)
-        self.assertEqual(self.writer_entity_instances, 1)
+        self.assertIsInstance(test_writers.get(), models.Writer)
+        self.assertEqual(test_writers.count(), 1)
 
 
     def test_create_writer_already_exists(self):
@@ -58,31 +75,55 @@ class CreateWriterTestCase(TestCaseConfig):
 
 class RegisterViewTestCase(TestCaseConfig):
 
-    @classmethod
-    def setUpClass(cls):
-
-        cls.user_data = {
-            'user_name' : "user1",
-            'email' : 'user1@email.com',
-            'password' : 'password'
-        }
-
     def test_register_new_user(self):
-        print("Open the app context")
         with app.app.app_context():
-            print(f"Is the app context open: {has_app_context()}")
-            models.database.connect()
-            print(f'The database is now open for the request context: {models.database.is_closed()}')
-            print("Enter request context")
+            with app.app.test_client() as client:
+             response = client.post(
+                     url_for('register'), 
+                     data=self.test_register_data,
+                     follow_redirects=True
+                 )
+             self.assertIn(b"Your account has been created!", response.data)
+
+
+    def test_register_existing_user(self):
+
+       models.Writer.create_writer(**self.test_writer)
+
+       with app.app.app_context():
             with app.app.test_client() as client:
                 response = client.post(
                         url_for('register'), 
-                        data=self.user_data,
-                        follow_redirects=False
+                        data=self.test_register_data,
+                        follow_redirects=True
                     )
+                self.assertIn(b"Registration failed.", response.data)
 
-                self.assertEqual(response.status_code, 302)
-                self.assertIn(b"Your account has been created!", response.data)
+class LoginViewTestCase(TestCaseConfig):
+    def test_login_user_registered(self):
+        TestCaseConfig.writer_generator(self)
+        with app.app.app_context():
+            with app.app.test_client() as client:
+                response = client.post(
+                    url_for('login'),
+                    data=self.test_login_data,
+                    follow_redirects=True
+                 )
+
+                self.assertIn(b"Login Successful!", response.data)
+
+    # def test_login_user_not_registered(self):
+    #         TestCaseConfig.writer_generator(self, 2)
+    #         with app.app.app_context():
+    #             with app.app.test_client() as client:
+    #                 response = client.post(
+    #                     url_for('login'),
+    #                     data=self.test_login_data,
+    #                     follow_redirects=True
+    #                  )
+
+    #                 self.assertEqual(response.status_code, 302)     
+
 
 
 if __name__ == '__main__':

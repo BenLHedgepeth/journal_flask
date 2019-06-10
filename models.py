@@ -2,8 +2,9 @@ import datetime
 
 
 from peewee import *
+from flask_login import UserMixin
 from flask_bcrypt import generate_password_hash
-
+import app
 
 database = SqliteDatabase(None)
 
@@ -12,7 +13,7 @@ class ModelConfig(Model):
         database = database
 
 
-class Writer(ModelConfig):
+class Writer(UserMixin, ModelConfig):
     user_name = CharField(unique=True)
     email = CharField(unique=True)
     password = CharField()
@@ -22,17 +23,20 @@ class Writer(ModelConfig):
 
     @classmethod
     def create_writer(cls, user_name, email, password):
+        app.app.logger.debug("Registering a user here.")
         with database.transaction():
             try:
                 Writer.create(
                     user_name=user_name,
                     email=email,
-                    password=generate_password_hash(password)
+                    password=generate_password_hash(password).decode("utf-8")
                 )
+
             except IntegrityError:
                 raise ValueError
             else:
-                pass
+                me = Writer.get(Writer.user_name == 'You')
+                app.app.logger.debug(f"Password hash assigned to user: {me.password}")
 
 
     def write_entry(self, journal_entry):
