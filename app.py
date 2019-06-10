@@ -46,7 +46,7 @@ class LoginView(View):
         login = self.form()
         
         if login.validate_on_submit():
-            import pdb; pdb.set_trace()
+            # import pdb; pdb.set_trace()
             user = self.verify_login_credentials(login)
             if user:
                 login_user(user)
@@ -67,7 +67,7 @@ class LoginView(View):
         if site_member:
           stored_password = site_member.password
           provided_password = form.password.data
-          app.logger.debug(f'User hashed password retrieved: {stored_password}')
+          # app.logger.debug(f'User hashed password retrieved: {stored_password}')
           password_accepted = bcrypt.check_password_hash(stored_password, provided_password)
 
           if password_accepted:

@@ -23,20 +23,20 @@ class Writer(UserMixin, ModelConfig):
 
     @classmethod
     def create_writer(cls, user_name, email, password):
-        app.app.logger.debug("Registering a user here.")
+        # app.app.logger.debug("Registering a user here.")
         with database.transaction():
             try:
                 Writer.create(
                     user_name=user_name,
                     email=email,
-                    password=generate_password_hash(password).decode("utf-8")
+                    password=app.bcrypt.generate_password_hash(password).decode("utf-8")
                 )
 
             except IntegrityError:
                 raise ValueError
             else:
-                me = Writer.get(Writer.user_name == 'You')
-                app.app.logger.debug(f"Password hash assigned to user: {me.password}")
+                # me = Writer.get(Writer.user_name == 'You')
+                # app.app.logger.debug(f"Password hash assigned to user: {me.password}")
 
 
     def write_entry(self, journal_entry):
