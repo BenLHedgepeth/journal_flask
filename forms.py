@@ -2,8 +2,8 @@ import re
 import datetime
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, TextAreaField, DateField, IntegerField
-from wtforms.validators import DataRequired, Email, EqualTo, Regexp
+from wtforms import StringField, PasswordField, SubmitField, TextAreaField, DateField, IntegerField, SelectField, FieldList, FormField
+from wtforms.validators import DataRequired, Email, EqualTo, Regexp, Optional
 
 
 class LoginForm(FlaskForm):
@@ -42,6 +42,16 @@ class RegisterForm(FlaskForm):
             label="Register"
         )
 
+class TagForm(FlaskForm):
+    tag1 = StringField(
+            label="Tag 1",
+            validators=[DataRequired()]
+        )
+    tag2 = StringField(
+            label="Tag 2",
+            validators=[Optional()]
+        )
+
 
 class JournalForm(FlaskForm):
     title = StringField(
@@ -54,14 +64,38 @@ class JournalForm(FlaskForm):
             validators=[DataRequired()]
         )
 
-    topic_learned = TextAreaField(
+    topic = TextAreaField(
             label="What did you learn...",
             validators=[DataRequired()]
         )
     resources = TextAreaField(
             label="Add whatever resources you believe apply to the topic..."
         )
-
+    tags = FieldList(FormField(TagForm), min_entries=1)
+ 
     submit = SubmitField(
             label="Submit Entry"
         )
+
+
+class EditJournalEntryForm(FlaskForm):
+    title = StringField(validators=[Optional()])
+
+    time = IntegerField(validators=[Optional()])
+
+    topic = TextAreaField(validators=[Optional()])
+
+    resources = TextAreaField(validators=[Optional()])   
+
+    tags = FieldList(
+        FormField(TagForm),
+        validators=[Optional()], 
+        min_entries=1)
+ 
+    submit = SubmitField(
+            label="Submit Entry"
+        )
+
+
+
+

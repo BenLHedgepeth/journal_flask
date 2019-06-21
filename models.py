@@ -4,7 +4,7 @@ import datetime
 from peewee import *
 from flask_login import UserMixin
 from flask_bcrypt import generate_password_hash
-import app
+from slugify import slugify
 
 database = SqliteDatabase(None)
 
@@ -23,31 +23,28 @@ class Writer(UserMixin, ModelConfig):
 
     @classmethod
     def create_writer(cls, user_name, email, password):
-        app.app.logger.debug("Registering a user here. The user's password is 'secret'")
         with database.transaction():
             try:
                 Writer.create(
                     user_name=user_name,
                     email=email,
-                    password=app.bcrypt.generate_password_hash(password).decode("utf-8")
+                    password=generate_password_hash(password)
                 )
 
             except IntegrityError:
                 raise ValueError
             else:
-                me = Writer.get(Writer.user_name == 'User')
-                app.app.logger.debug(f"Generated hash for the password 'secret': {me.password}")
-                app.app.logger.debug(f"The hash is a type: {type(me.password)}")
+                pass
+                
 
-
-    def write_entry(self, journal_entry):
+    def write_entry(self, entry):
         with database.transaction():
             try:
                 JournalEntry.create(
                     title = journal_entry.title.data,
                     date = journal_entry.data.data,
-                    time_spent = journal_entry.time_spent.data,
-                    topic_learned = journal_entry.topic_learned.data,
+                    time = journal_entry.time_spent.data,
+                    topic = journal_entry.topic_learned.data,
                     resources = journal_entry.resources.data,
                     writer = ForeignKeyField(model=Writer)
                 )
@@ -56,21 +53,47 @@ class Writer(UserMixin, ModelConfig):
             else:
                 pass
 
+
+    def retrieve_entry(self, slug):
+    
+        user_entry = JournalEntry.get_or_none(
+                JournalEntry.slug == slug
+            )
+        if not user_entry:
+            return False
+        entry_tags = (Tag.select()
+                    .join(JournalEntryTag)
+                    .join(JournalEntry)
+                    .where(JournalEntry.slug == slug))
+
+        return (user_entry, entry_tags)
+
+
 class JournalEntry(ModelConfig):
     title = CharField()
+    slug = CharField()
     date = DateField(default=datetime.datetime.now)
-    time_spent = TimeField(formats=['%H:%M'])
-    topic_learned = TextField()
+    time = TimeField(formats=['%H:%M'])
+    topic = TextField()
     resources = TextField(null=True)
-    writer = ForeignKeyField(model=Writer)
+    writer_id = ForeignKeyField(model=Writer)
+
 
 
 class Tag(ModelConfig):
-    tag_link = CharField(unique=True)
-    logged_entry = ForeignKeyField(model=JournalEntry)
+    name = CharField(unique=True)
+
+
+class JournalEntryTag(ModelConfig):
+    journal_entry = ForeignKeyField(model=JournalEntry)
+    journal_tag = ForeignKeyField(model=Tag)
+
+
+
+
 
 def initialize_tables():
-    tables = [Writer, JournalEntry, Tag]
+    tables = [Writer, JournalEntry, Tag, JournalEntryTag]
     all_tables_exist = all(database.table_exists(table) == True for table in tables) 
 
     if all_tables_exist:

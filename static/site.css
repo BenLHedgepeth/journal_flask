@@ -8,6 +8,14 @@
 	box-sizing: border-box;
 }
 
+a {
+	text-decoration: none;
+}
+
+html {
+	min-height: 100vh;
+}
+
 body {
 	position: relative;
 	font-size: 16px;
@@ -42,7 +50,7 @@ footer {
 	border-top: 2px dotted #678f89;
 }
 
-.intro_content {
+.content {
 	width: 60%;
 	margin: auto;
 }
@@ -168,7 +176,7 @@ ul li a {
 .new-entry {
 	max-width: 800px;
 	margin: 0 auto;
-	padding: 70px 0 150px 0;
+	padding: 0 0 150px 0;
 }
 .edit-entry h2,
 .new-entry h2 {
@@ -192,11 +200,16 @@ ul li a {
 }
 .entry {
 	max-width: 800px;
-	margin: 75px auto 0 auto;
+	margin: 25px auto 0 auto;
 	text-align: left;
 }
 .entry p {
-	margin-bottom: 40px;
+	margin-bottom: 20px;
+}
+
+.entry_style {
+	padding: 10px;
+	border: 5px solid;
 }
 .edit {
 	padding-bottom: 80px;
@@ -264,10 +277,49 @@ input[type=submit] {
 	margin-right: 5px;
 }
 
+
 .form_layout {
 	display: flex;
 	width: 50%;
 	margin: 0px auto 1rem;
+}
+
+.form_tag_div {
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+input[name="tags-0-tag1"], input[name="tags-0-tag2"] {
+	display: inline-flex;
+	width: 45%;
+	flex: auto;
+}
+
+input[name="tags-0-tag1"] {
+	margin-right: 2.5%;
+}
+
+input[name="tags-0-tag2"] {
+	/*margin-left: 2.5%;*/
+}
+
+.article_style {
+	margin: .5rem auto;
+	width: 65%;
+	border: 2px solid;
+	padding: 1rem;
+	border-radius: 10px;
+
+}
+
+.new_entry_button {
+	display: block;
+	text-align: center;
+	background: #678f89;
+	color: #FFF;
+	padding: 25px;
+	width: 33%;
+	margin: auto;
 }
 
 .login_layout {
@@ -312,7 +364,27 @@ textarea {
 
 
 
+.flash {
+	position: absolute;
+	top: 0;
+	display: inline-block;
+	width: calc(1486px - 74px);
+	padding: 8px 10px 6px 10px;
+	background: #678f89;
+	border: 2px solid #678f89;
+	border-radius: 4px;
+	color: #FFF;
+}
 
 
 
+/*.flash_wrapper {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+
+}*/
 

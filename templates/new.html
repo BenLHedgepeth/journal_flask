@@ -3,12 +3,12 @@
 {% from 'macros.html' import render_form %}
 
 {% block site_links %}
-    <a class="logo" href="index.html"><i class="material-icons">library_books</i></a>
+     <a class="logo" href="{{ url_for('home') }}"><i class="material-icons">library_books</i></a>
     <a class="button icon-right" href="new.html"><span>New Entry</span> <i class="material-icons">add</i></a>
 {% endblock %}
 
 {% block main_content %}
-    {{ render_form(form, 'new_entry', 'login_layout') }}
+    {{ render_form(form, 'add_entry', 'login_layout') }}
 {% endblock %}
 <!-- 
                 </div>

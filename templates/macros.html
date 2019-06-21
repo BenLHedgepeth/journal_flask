@@ -1,24 +1,49 @@
-{% macro render_form(form, endpoint, form_class, field_class=None) %}
+{% macro render_form(form, endpoint, form_class, edit=False, field_class=None) %}
     <form action="{{ url_for(endpoint) }}" method="post" class="{{ form_class }} form_layout">
         {{ form.csrf_token }}
         {% for field in form %}
-            {{ render_field(field, field_class) }}
+            {{ render_field(field, field_class, edit) }}
         {% endfor %}
 		  </form>
 {% endmacro %}
 
-{% macro render_field(field, field_class=None) %}
+{% macro render_field(field, edit, field_class=None) %}
     {% if field.id != 'csrf_token' %}
         {% if field.errors %}
             {% for field_error in field.errors %}
                 {{ field_error }}
             {% endfor %}
         {% endif %}
-        {% if field.type != "TextAreaField" %}
-            {{ field(class=field_class, placeholder=field.label.text) }}   
-        {% else %}
-           {{ field(class=field_class, placeholder=field.label.text, rows="2") }}    
-        {% endif %}      
+        <!-- {% if not edit %} -->
+            {% if field.type == "FieldList" %}
+                <div class="form_tag_div">
+                {% for input in field %}
+                    {% for _ in input %}
+                        {{ _(placeholder=_.label.text) }} 
+                    {% endfor %}
+                {% endfor %}
+                </div>
+            {% elif field.type != "TextAreaField" %}
+                {{ field(class=field_class, placeholder=field.label.text) }}   
+            {% else %}
+               {{ field(class=field_class, placeholder=field.label.text, rows="2") }}    
+            {% endif %}  
+        <!-- {% else %}
+            {% set previous_entry_input = entry[field.name] %}
+            {% if field.type == "FieldList" %}
+                <div class="form_tag_div">
+                {% for input in field %}
+                    {% for field in input %}
+                        {{ field(placeholder=previous_entry_input) }} 
+                    {% endfor %}
+                {% endfor %}
+                </div>
+            {% elif field.type != "TextAreaField" %}
+                {{ field(class=field_class, placeholder=previous_entry_input) }}   
+            {% else %}
+               {{ field(class=field_class, placeholder=prvious_entry_input, rows="2") }}    
+            {% endif %}  
+        {% endif %} -->
     {% endif %}
 {% endmacro %}
 
