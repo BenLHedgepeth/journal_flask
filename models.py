@@ -11,6 +11,7 @@ database = SqliteDatabase(None)
 class ModelConfig(Model):
     class Meta:
         database = database
+        only_save_dirty = True
 
 
 class Writer(UserMixin, ModelConfig):

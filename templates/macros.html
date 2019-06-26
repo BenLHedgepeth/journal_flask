@@ -1,20 +1,50 @@
-{% macro render_form(form, endpoint, form_class, edit=False, field_class=None) %}
-    <form action="{{ url_for(endpoint) }}" method="post" class="{{ form_class }} form_layout">
+{% macro render_form(form, endpoint, form_class, field_class=None, object=None) %}
+    {% if not object %}
+        {% set url_endpoint = url_for(endpoint) %}
+    {% else %}
+        {% set url_endpoint = url_for('edit', slug=object.slug) %}
+    {% endif %}
+    <form action="{{ url_endpoint }}" method="post" class="{{ form_class }} form_layout">
         {{ form.csrf_token }}
-        {% for field in form %}
-            {{ render_field(field, field_class, edit) }}
-        {% endfor %}
-		  </form>
-{% endmacro %}
-
-{% macro render_field(field, edit, field_class=None) %}
-    {% if field.id != 'csrf_token' %}
-        {% if field.errors %}
-            {% for field_error in field.errors %}
-                {{ field_error }}
+        {% if not object %}
+            {% for field in form %}
+                {{ check_field_errors(field) }}
+                {{ render_field(field, field_class) }}
+            {% endfor %}
+        {% else %}
+            {% for field in form %}
+                {{ check_field_errors(field) }}
+                {{ render_field(field, field_class, object) }}
             {% endfor %}
         {% endif %}
-        <!-- {% if not edit %} -->
+    </form>
+{% endmacro %}
+
+
+<!-- {% macro edit_journal_entry(form, form_class, update=True) %}
+    <form action="{{ url_for('edit', slug=object.slug) }}" method="post" class="{{ form_class }} form_layout">
+        {{ form.csrf_token }}
+        {% for field in form %}
+            {{ check_field_errors(field) }}
+            {{ render_field(field, object, field_class) }}
+        {% endfor %}
+    </form>
+{% endmacro %} -->
+
+
+{% macro check_field_errors(field) %}
+    {% if field.errors %}
+        {% for field_error in field.errors %}
+            {{ field_error }}
+        {% endfor %}
+    {% endif %}
+{% endmacro %}
+
+
+{% macro render_field(field, field_class=None, object=None) %}
+    {% if field.id != 'csrf_token' %}
+        {{ check_field_errors(field) }}
+        {% if not object %}
             {% if field.type == "FieldList" %}
                 <div class="form_tag_div">
                 {% for input in field %}
@@ -26,24 +56,26 @@
             {% elif field.type != "TextAreaField" %}
                 {{ field(class=field_class, placeholder=field.label.text) }}   
             {% else %}
-               {{ field(class=field_class, placeholder=field.label.text, rows="2") }}    
+               {{ field(class=field_class, placeholder=field.label.text) }}    
             {% endif %}  
-        <!-- {% else %}
-            {% set previous_entry_input = entry[field.name] %}
+        {% else %}
+            {% set input_field = field.name %}
             {% if field.type == "FieldList" %}
                 <div class="form_tag_div">
                 {% for input in field %}
                     {% for field in input %}
-                        {{ field(placeholder=previous_entry_input) }} 
+                        {{ field(value=object|attr(input_field)) }} 
                     {% endfor %}
                 {% endfor %}
                 </div>
+            {% elif field.type == "SubmitField" %}
+                {{ field(placeholder=field.label.text) }}
             {% elif field.type != "TextAreaField" %}
-                {{ field(class=field_class, placeholder=previous_entry_input) }}   
+                {{ field(class=field_class, value=object|attr(input_field)) }}   
             {% else %}
-               {{ field(class=field_class, placeholder=prvious_entry_input, rows="2") }}    
+                <textarea class="{{field_class}}">{{object|attr(input_field)}}</textarea>    
             {% endif %}  
-        {% endif %} -->
+        {% endif %}
     {% endif %}
 {% endmacro %}
 

@@ -7,10 +7,11 @@ import views
 from instance.config import BaseConfig
 
 from flask import (Flask, render_template, g, flash, 
-                     url_for, redirect, current_app)
+                    url_for, redirect, current_app)
 
 from flask.views import View
-from flask_login import LoginManager, login_user, logout_user, login_required, current_user
+from flask_login import (LoginManager, login_user, logout_user, 
+                            login_required, current_user)
 from flask_bcrypt import Bcrypt
 from slugify import slugify
 
@@ -46,7 +47,7 @@ class LoginView(View):
         self.template = template
 
     def dispatch_request(self):
-        # import pdb; pdb.set_trace()
+
         login = self.form()
         if login.validate_on_submit():
             user = models.Writer.get_or_none(
@@ -66,12 +67,21 @@ class LoginView(View):
             return redirect(url_for('home'))
         return render_template('login.html', form=login)
 
+app.add_url_rule(
+     '/login', 
+     view_func=LoginView.as_view(
+         'login', 
+         form=forms.LoginForm, 
+         template='login.html'), 
+     methods=['GET', 'POST'])
+
+
 class RegisterView(LoginView):
     def __init__(self, form, template):
         super().__init__(form, template)
 
     def dispatch_request(self):
-        # import pdb; pdb.set_trace()
+
         form = self.form()
         if form.validate_on_submit():
             try:
@@ -88,6 +98,14 @@ class RegisterView(LoginView):
                 return redirect(url_for("home"))
         return render_template(self.template, form=form)
 
+app.add_url_rule(
+    '/register', 
+    view_func=RegisterView.as_view(
+         'register', 
+         form=forms.RegisterForm,
+         template='register.html'), 
+    methods=['GET', 'POST'])
+
 
 class IndexView(View):
 
@@ -98,6 +116,15 @@ class IndexView(View):
 
     return render_template(self.template, journal_entries=journal_entries)
 
+app.add_url_rule(
+    '/', 
+    view_func=IndexView.as_view('home'), 
+    methods=['GET'])
+
+app.add_url_rule(
+     '/entries', 
+     view_func=IndexView.as_view('entries'),
+     methods=['GET'])
 
 
 class NewJournalEntryView(View):
@@ -110,7 +137,6 @@ class NewJournalEntryView(View):
     def dispatch_request(self):
         entry = self.form()
         if entry.validate_on_submit():
-            # import pdb; pdb.set_trace()
             try:
                 models.JournalEntry.create(
                     title = entry.title.data,
@@ -151,6 +177,14 @@ class NewJournalEntryView(View):
                 return redirect(url_for("home"))
         return render_template(self.template, form=entry)
 
+app.add_url_rule(
+    '/entries/new', 
+    view_func=(NewJournalEntryView.as_view(
+        'add_entry', 
+        form=forms.JournalForm, 
+        template='new.html')), 
+    methods=['GET', 'POST'])
+
 
 class JournalEntryDetailView(View):
 
@@ -168,9 +202,17 @@ class JournalEntryDetailView(View):
         else:
             return render_template(
                 'detail.html', 
-                entry=journal_data[0], 
-                tags=journal_data[1]
+                entry=journal_data[0]
             )
+
+
+app.add_url_rule(
+    '/entries/<slug>', 
+    view_func=(JournalEntryDetailView.as_view(
+         'entry', 
+         template='detail.html')), 
+    methods=['GET'])
+
 
 class EditJournalView(View):
 
@@ -185,52 +227,17 @@ class EditJournalView(View):
         edit_journal_entry = self.form()
 
         if edit_journal_entry.validate_on_submit():
-             flash("Journal entry updated!")
-             writer_entry.save()
+
+            writer_entry[0].save()
+            flash("Journal entry updated!")
+            return redirect(url_for('home'))
 
         return render_template(
             self.template, 
             form=edit_journal_entry, 
             entry=writer_entry[0], 
-            tags=writer_entry[1])
-
-
-class LogoutView(View):
-
-    def dispatch_request(self):
-        logout_user()
-        flash("You're now logged out.")
-        return redirect(url_for('home'))
-
-
-app.add_url_rule(
-    '/', 
-    view_func=IndexView.as_view('home'), 
-    methods=['GET'])
-
-
-app.add_url_rule(
-     '/entries', 
-     view_func=IndexView.as_view('entries'),
-     methods=['GET'])
-
-
-app.add_url_rule(
-    '/entries/new', 
-    view_func=(NewJournalEntryView.as_view(
-        'add_entry', 
-        form=forms.JournalForm, 
-        template='new.html')), 
-    methods=['GET', 'POST'])
-
-
-app.add_url_rule(
-    '/entries/<slug>', 
-    view_func=(JournalEntryDetailView.as_view(
-         'entry', 
-         template='detail.html')), 
-    methods=['GET'])
-
+            tags=writer_entry[1],
+            )
 
 app.add_url_rule(
     '/entries/<slug>/edit', 
@@ -241,28 +248,18 @@ app.add_url_rule(
     methods=['GET', 'POST'])
 
 
-app.add_url_rule(
-     '/login', 
-     view_func=LoginView.as_view(
-         'login', 
-         form=forms.LoginForm, 
-         template='login.html'), 
-     methods=['GET', 'POST'])
+class LogoutView(View):
 
+    def dispatch_request(self):
+        logout_user()
+        flash("You're now logged out.")
+        return redirect(url_for('home'))
 
 app.add_url_rule(
      '/logout', 
      view_func=LogoutView.as_view('logout'), 
      methods=['GET'])
 
-
-app.add_url_rule(
-    '/register', 
-    view_func=RegisterView.as_view(
-         'register', 
-         form=forms.RegisterForm,
-         template='register.html'), 
-    methods=['GET', 'POST'])
 
 
 

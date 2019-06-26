@@ -154,7 +154,7 @@ class LoginViewTestCase(TestCaseConfig):
                  )
                 self.assertIn(b"Invalid username and/or password", response.data)
 
-class NewEntryTestCase(unittest.TestCase):
+class NewEntryTestCase(TestCaseConfig):
 
     def test_write_entry(self):
         TestCaseConfig.writer_generator(self)
@@ -164,12 +164,13 @@ class NewEntryTestCase(unittest.TestCase):
                     url_for('login'),
                     data=self.test_valid_login_data
                  )
-                # response = client.post(
-                #     url_for('add_entry'),
-                #     data=self.test_entry_data
-                #  )
+                response = client.post(
+                    url_for('add_entry'),
+                    data=self.test_entry_data,
+                    follow_redirects=True
+                 )
 
-                # self.assertEqual(current_user, 'user1')
+                self.assertIn(b"Your journal entry has been saved!", response.data)
 
 
 
