@@ -7,13 +7,13 @@
     <form action="{{ url_endpoint }}" method="post" class="{{ form_class }} form_layout">
         {{ form.csrf_token }}
         {% if not object %}
-            {% for field in form %}
-                {{ check_field_errors(field) }}
+            {{ check_form_errors(form) }}
+            {% for field in form %} 
                 {{ render_field(field, field_class) }}
             {% endfor %}
         {% else %}
+            {{ check_form_errors(form) }}
             {% for field in form %}
-                {{ check_field_errors(field) }}
                 {{ render_field(field, field_class, object) }}
             {% endfor %}
         {% endif %}
@@ -21,29 +21,29 @@
 {% endmacro %}
 
 
-<!-- {% macro edit_journal_entry(form, form_class, update=True) %}
+{% macro edit_journal_entry(form, form_class, update=True) %}
     <form action="{{ url_for('edit', slug=object.slug) }}" method="post" class="{{ form_class }} form_layout">
         {{ form.csrf_token }}
-        {% for field in form %}
-            {{ check_field_errors(field) }}
-            {{ render_field(field, object, field_class) }}
-        {% endfor %}
+        {{ check_form_errors(form) }}
+        {{ render_field(field, object, field_class) }}
     </form>
-{% endmacro %} -->
+{% endmacro %}
 
 
-{% macro check_field_errors(field) %}
-    {% if field.errors %}
-        {% for field_error in field.errors %}
-            {{ field_error }}
+{% macro check_form_errors(form) %} 
+    {% if form.errors %}
+        <p class="error_heading">The following fields are required:</p>
+        <ul class="form_fields error_message">
+        {% for error in form.errors.values() %}
+            <li class="inline_error">{{ error[0] }}</li>
         {% endfor %}
-    {% endif %}
+        </ul>
+    {% endif %}                
 {% endmacro %}
 
 
 {% macro render_field(field, field_class=None, object=None) %}
     {% if field.id != 'csrf_token' %}
-        {{ check_field_errors(field) }}
         {% if not object %}
             {% if field.type == "FieldList" %}
                 <div class="form_tag_div">
@@ -53,6 +53,8 @@
                     {% endfor %}
                 {% endfor %}
                 </div>
+            {% elif field.type == "DateTimeField" %}
+                {{ field(class=field_class, class="hide_date", placeholder=field.label.text) }}
             {% elif field.type != "TextAreaField" %}
                 {{ field(class=field_class, placeholder=field.label.text) }}   
             {% else %}
@@ -73,7 +75,7 @@
             {% elif field.type != "TextAreaField" %}
                 {{ field(class=field_class, value=object|attr(input_field)) }}   
             {% else %}
-                <textarea class="{{field_class}}">{{object|attr(input_field)}}</textarea>    
+                <textarea name="{{ field.name }}" class="{{ field_class }}">{{ object|attr(input_field) }}</textarea>    
             {% endif %}  
         {% endif %}
     {% endif %}

@@ -5,54 +5,62 @@
    ========================================================================== */
 
 * {
-	box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 a {
-	text-decoration: none;
+    text-decoration: none;
+    color: black;
 }
 
 html {
-	min-height: 100vh;
+    min-height: 100vh;
 }
 
 body {
-	position: relative;
-	font-size: 16px;
-	color: #404a49;
-	font-family: 'Cousine', serif;
-	font-weight: 400;
+    position: relative;
+    background: snow;
+    font-size: 16px;
+    color: #404a49;
+    font-family: 'Cousine', serif;
+    font-weight: 400;
 }
 .container {
-	margin: 0 auto;
-	padding: 0 25px;
+    margin: 0 auto;
+    padding: 0 25px;
 }
 header .site-header {
-	margin: 0 auto;
-	height: 95px;
+    margin: 0 auto;
+    height: 95px;
 }
 header .logo i {
-	color: #678f89;
-	margin: 20px 0 0 -5px;
-	float: left;
-	font-size: 40px;
+    color: #678f89;
+    margin: 20px 0 0 -5px;
+    float: left;
+    font-size: 40px;
 }
 header .button {
-	float: right;
-	margin: 33px 0 0 0;
+    float: right;
+    margin: 33px 0 0 0;
 }
 footer {
-	position: fixed;
-	bottom: 0;
-	width: 100%;
-	text-align: center;
-	padding: 15px 0;
-	border-top: 2px dotted #678f89;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
+    padding: 15px 0;
+    border-top: 2px dotted #678f89;
+    z-index: 1;
+    background: white;
 }
 
 .content {
-	width: 60%;
-	margin: auto;
+    width: 60%;
+    margin: auto;
+}
+
+textarea {
+    resize: none;
 }
 
 
@@ -62,58 +70,79 @@ footer {
    ========================================================================== */
 
 .button {
-	padding: 8px 10px 6px 10px;
-	background: #678f89;
-	border: 2px solid #678f89;
-	border-radius: 4px;
-	text-decoration: none;
-	color: #FFF;
-	position: relative;
-	text-align: center;
-	font-size: 14px;
+    padding: 8px 10px 6px 10px;
+    background: #678f89;
+    border: 2px solid #678f89;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #FFF;
+    position: relative;
+    text-align: center;
+    font-size: 14px;
 }
 .button.button-secondary {
-	background: #FFF;
-	border: 2px solid #e1e1e1;
-	color: #404a49;
+    background: #FFF;
+    border: 2px solid #e1e1e1;
+    color: #404a49;
 }
 .button.icon-right {
-	padding-right: 30px;
+    padding-right: 30px;
 }
 .button.icon-left {
-	padding-left: 30px;
-	top: -10px;
+    padding-left: 30px;
+    top: -10px;
 }
 .button.icon-right i {
-	position: absolute;
-	top: 3px;
-	right: 3px;
+    position: absolute;
+    top: 3px;
+    right: 3px;
 }
 .button.icon-left i {
-	position: absolute;
-	top: 3px;
-	left: 3px;
+    position: absolute;
+    top: 3px;
+    left: 3px;
 }
 .button:focus {
-	outline: 0;
+    outline: 0;
 }
 
-
-
 .index_buttons > a {
-	background: #678f89;
-	line-height: 2;
-	flex: 1;
+    background: #678f89;
+    line-height: 2;
+    flex: 1;
 }
 
 .index_buttons > a:first-child {
-	margin-right: 10%;
+    margin-right: 10%;
 }
 
 .index_buttons > a:last-child {
-	margin-left: 10%;
+    margin-left: 10%;
 }
 
+.add_entry_button {
+    position: absolute;
+    top: 0;
+}
+
+.new_entry_button {
+    display: block;
+    text-align: center;
+    background: #678f89;
+    color: #FFF;
+    padding: 25px;
+    width: 15%;
+    position: absolute;
+    top: 2%;
+    margin-left: calc(60vw / 3.25)
+}
+
+.index_buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
 
 /* ==========================================================================
    Typography
@@ -122,47 +151,47 @@ footer {
 h1,
 h2,
 h3 {
-	margin: 0;
-	font-weight: 400;
-	line-height: 1em;
-	color: #000;
+    margin: 0;
+    font-weight: 400;
+    line-height: 1em;
+    color: #000;
 }
 h1 {
-	font-size: 44px;
-	margin-bottom: 12px;
+    font-size: 44px;
+    margin-bottom: 12px;
 }
 h2 {
-	font-size: 32px;
+    font-size: 32px;
 }
 h2 a {
-	text-decoration: none;
-	color: #000;
+    text-decoration: none;
+    color: #000;
 }
 h3 {
-	font-size: 18px;
-	font-family: 'Work Sans', serif;
-	font-weight: 600;
-	text-transform: uppercase;
+    font-size: 18px;
+    font-family: 'Work Sans', serif;
+    font-weight: 600;
+    text-transform: uppercase;
 }
 p {
-	line-height: 1.8em;
-	font-size: 18px;
+    line-height: 1.8em;
+    font-size: 18px;
 }
 p a {
-	border-bottom: 2px solid #678f89;
-	padding: 0;
-	color: #678f89;
-	text-decoration: none;
+    border-bottom: 2px solid #678f89;
+    padding: 0;
+    color: #678f89;
+    text-decoration: none;
 }
 ul li {
-	line-height: 1.8em;
-	font-size: 18px;
+    line-height: 1.8em;
+    font-size: 18px;
 }
 ul li a {
-	border-bottom: 2px solid #678f89;
-	line-height: 1.8em;
-	color: #678f89;
-	text-decoration: none;
+    border-bottom: 2px solid #678f89;
+    line-height: 1.8em;
+    color: #678f89;
+    text-decoration: none;
 }
 
 
@@ -174,63 +203,69 @@ ul li a {
 .entry-list,
 .edit-entry,
 .new-entry {
-	max-width: 800px;
-	margin: 0 auto;
-	padding: 0 0 150px 0;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 0 0 150px 0;
 }
 .edit-entry h2,
 .new-entry h2 {
-	margin-bottom: 35px;
+    margin-bottom: 35px;
 }
 .entry-list article {
-	margin-bottom: 70px;
-	text-align: center;
+    margin-bottom: 70px;
+    text-align: center;
 }
 .entry-list article:last-child {
-	margin-bottom: 0;
+    margin-bottom: 0;
 }
 .entry-list article h2 {
-	margin-bottom: 8px;
+    margin-bottom: 8px;
 }
 .entry-list.single {
-	padding-bottom: 70px;
+    padding-bottom: 70px;
 }
 .entry-list.single time {
-	font-size: 18px;
+    font-size: 18px;
 }
 .entry {
-	max-width: 800px;
-	margin: 25px auto 0 auto;
-	text-align: left;
+    max-width: 800px;
+    margin: 25px auto 0 auto;
+    text-align: left;
 }
 .entry p {
-	margin-bottom: 20px;
+    margin-bottom: 20px;
 }
 
 .entry_style {
-	padding: 10px;
-	border: 5px solid;
+    padding: 10px;
+    border: 5px solid;
 }
+
 .edit {
-	padding-bottom: 80px;
-	text-align: center;
-	margin: 0 auto;
+    padding-bottom: 80px;
+    text-align: center;
+    margin: 0 auto;
 }
+
 .edit a {
-	font-weight: 400;
-	text-transform: uppercase;
-	font-size: 18px;
+    font-weight: 400;
+    text-transform: uppercase;
+    font-size: 18px;
 }
 
 .content_info {
-	margin-top: 2rem;
+    margin-top: 2rem;
 }
 
 .index_buttons {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	margin-top: 2rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 2rem;
+}
+
+.writer_info {
+    display: inline-block;
 }
 
 
@@ -241,150 +276,157 @@ ul li a {
 
 
 form label {
-	display: block;
-	margin-bottom: 8px;
+    display: block;
+    margin-bottom: 8px;
 }
 form input[type=text],
 form input[type=password],
 form input[type=date],
 form input[type=submit],
 form textarea {
-	border: 2px solid #e1e1e1;
-	font-size: 18px;
-	line-height: 1.5em;
-	padding:10px 13px;
-	margin-bottom: 30px;
-	border-radius: 4px;
-	/*width: calc(100% - 32px);*/
+    border: 2px solid #e1e1e1;
+    font-size: 18px;
+    line-height: 1.5em;
+    padding:10px 13px;
+    margin-bottom: 30px;
+    border-radius: 4px;
+    /*width: calc(100% - 32px);*/
 }
 form input[type=text]:focus,
 form input[type=date]:focus,
 form input[type=password]:focus,
 form textarea:focus {
-	outline: 0;
-	border-color: #678f89;
+    outline: 0;
+    border-color: #678f89;
 }
 form input[type=text]:hover,
 form input[type=date]:hover
 form textarea:hover {
-	border-color: #678f89;
+    border-color: #678f89;
 }
 .edit-entry form textarea,
 .new-entry form textarea {
-	min-height: 200px;
+    min-height: 200px;
 }
 input[type=submit] {
-	margin-right: 5px;
+    margin-right: 5px;
 }
 
 
 .form_layout {
-	display: flex;
-	width: 50%;
-	margin: 0px auto 1rem;
+    display: flex;
+    width: 50%;
+    margin: 0px auto 1rem;
 }
 
 .form_tag_div {
-	flex-direction: row;
-	justify-content: space-between;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.hide_date {
+    display: none;
 }
 
 input[name="tags-0-tag1"], input[name="tags-0-tag2"] {
-	display: inline-flex;
-	width: 45%;
-	flex: auto;
+    display: inline-flex;
+    width: 45%;
+    flex: auto;
 }
 
 input[name="tags-0-tag1"] {
-	margin-right: 2.5%;
+    margin-right: 2.5%;
 }
 
 input[name="tags-0-tag2"] {
-	/*margin-left: 2.5%;*/
+    /*margin-left: 2.5%;*/
 }
 
 .article_style {
-	margin: .5rem auto;
-	width: 65%;
-	border: 2px solid;
-	padding: 1rem;
-	border-radius: 10px;
-
-}
-
-.new_entry_button {
-	display: block;
-	text-align: center;
-	background: #678f89;
-	color: #FFF;
-	padding: 25px;
-	width: 33%;
-	margin: auto;
+    margin: .5rem auto;
+    width: 65%;
+    border: 2px solid;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0px 2px 2px silver;
 }
 
 .login_layout {
-	width: 30%;
-	align-items: stretch;
-	flex-direction: column;
+    width: 30%;
+    align-items: stretch;
+    flex-direction: column;
 }
 
 .register_layout {
-	flex-direction: row;
-	flex-wrap: wrap;
+    flex-direction: row;
+    flex-wrap: wrap;
 }
 
-
 .form_layout input:last-child {
-	align-self: center;
-	width: 100%;
+    align-self: center;
+    width: 100%;
 }
 
 .register_layout > .register_input {
-	width: 45%;
-	margin: 2.5%;
+    width: 45%;
+    margin: 2.5%;
 }
 
 .register_layout > .register_input:last_child {
-	width: 5px;
+    width: 5px;
 }
 
 .entry_layout {
-	width: 30%;
-	display: flex;
-	flex-direction: column;
+    width: 30%;
+    display: flex;
+    flex-direction: column;
 }
-
-
-
-
-textarea {
-	resize: none;
-}
-
-
-
 
 .flash {
-	position: absolute;
-	top: 0;
-	display: inline-block;
-	width: calc(1486px - 74px);
-	padding: 8px 10px 6px 10px;
-	background: #678f89;
-	border: 2px solid #678f89;
-	border-radius: 4px;
-	color: #FFF;
+    position: absolute;
+    top: 0;
+    display: inline-block;
+    text-decoration: underline;
 }
 
 
+.flash_wrapper {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 
-/*.flash_wrapper {
-	position: absolute;
-	top: 0;
-	width: 100%;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
+}
 
-}*/
+.form_fields {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.field_errors li {
+    text-align: center;
+}
+
+.inline_error {
+    display: inline-block;
+    text-decoration: underline;
+}
+
+.error_message {
+    text-align: center;
+    margin: auto;
+    display: inline-block;
+}
+
+.headline_center {
+    text-align: center;
+}
+
+.error_heading {
+    text-align: center;
+    margin: auto;
+}
 

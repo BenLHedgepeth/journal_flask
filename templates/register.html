@@ -9,9 +9,9 @@
   
 {% block main_content %}
     {% with messages = get_flashed_messages(with_categories=True) %}
-        <ul>
+        <ul class="form_fields">
         {% for category, message in messages %}
-            <li class="{{ category }}">{{ message }}</li>
+            <li class="{{ category }} headline_center">{{ message }}</li>
         {% endfor %}
         </ul>
     {% endwith %}
