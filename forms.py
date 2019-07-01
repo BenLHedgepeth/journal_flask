@@ -2,11 +2,9 @@ import re
 import datetime
 
 from flask_wtf import FlaskForm
-
 from wtforms import (StringField, PasswordField, SubmitField, TextAreaField,
                      DateField, IntegerField, SelectField, FieldList,
                      FormField, DateTimeField)
-
 from wtforms.validators import DataRequired, Email, EqualTo, Regexp, Optional
 
 
@@ -77,7 +75,7 @@ class JournalForm(FlaskForm):
             validators=[DataRequired(message="Resources")])
 
     tags = FieldList(FormField(TagForm), min_entries=1)
-    
+
     submit = SubmitField(label="Submit Entry")
 
 
