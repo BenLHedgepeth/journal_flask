@@ -9,9 +9,11 @@
 }
 
 a {
-    text-decoration: none;
+    line-height: 1.8em;
     color: black;
 }
+
+
 
 ul {
     list-style: none;
@@ -33,7 +35,7 @@ h2 {
 
 body {
     position: relative;
-    background: snow;
+    background: ghostwhite;
     font-size: 16px;
     color: #404a49;
     font-family: 'Cousine', serif;
@@ -48,14 +50,14 @@ header .site-header {
     height: 95px;
 }
 header .logo i {
-    color: #678f89;
+    color: black;
     margin: 20px 0 0 -5px;
     float: left;
     font-size: 40px;
 }
 header .button {
     float: right;
-    margin: 33px 0 0 0;
+    margin: 33px 10px 0;
 }
 footer {
     position: fixed;
@@ -65,7 +67,7 @@ footer {
     padding: 15px 0;
     border-top: 2px dotted #678f89;
     z-index: 1;
-    background: white;
+    background: ghostwhite;
 }
 
 .content {
@@ -85,19 +87,19 @@ textarea {
 
 .button {
     padding: 8px 10px 6px 10px;
-    background: #678f89;
-    border: 2px solid #678f89;
+    background: snow;
+    box-shadow: 0px 2px 2px silver;
     border-radius: 4px;
     text-decoration: none;
-    color: #FFF;
+    color: black;
     position: relative;
     text-align: center;
     font-size: 14px;
 }
 .button.button-secondary {
-    background: #FFF;
-    border: 2px solid #e1e1e1;
-    color: #404a49;
+    background: black;
+    border: 2px solid black;
+    color: black;
 }
 .button.icon-right {
     padding-right: 30px;
@@ -121,7 +123,7 @@ textarea {
 }
 
 .index_buttons > a {
-    background: #678f89;
+    background: snow;
     line-height: 2;
     flex: 1;
 }
@@ -142,8 +144,8 @@ textarea {
 .new_entry_button {
     display: block;
     text-align: center;
-    background: #678f89;
-    color: #FFF;
+    background: snow;
+    color: black;
     padding: 8px 10px 6px 10px;
     margin-left: 54vw;
     border-radius: 4px;
@@ -159,6 +161,12 @@ textarea {
     flex-direction: row;
     justify-content: space-between;
     margin-top: 2rem;
+}
+
+.delete_link {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
 }
 
 /* ==========================================================================
@@ -195,9 +203,9 @@ p {
     font-size: 18px;
 }
 p a {
-    border-bottom: 2px solid #678f89;
+    border-bottom: 2px solid black;
     padding: 0;
-    color: #678f89;
+    color: black;
     text-decoration: none;
 }
 ul li {
@@ -205,9 +213,9 @@ ul li {
     font-size: 18px;
 }
 ul li a {
-    border-bottom: 2px solid #678f89;
+    border-bottom: 2px solid black;
     line-height: 1.8em;
-    color: #678f89;
+    color: black;
     text-decoration: none;
 }
 
@@ -261,8 +269,9 @@ ul li a {
 }
 
 .entry_style {
+    background: snow;
     padding: 10px;
-    border: 5px solid;
+    box-shadow: 0px 2px 2px silver;
 }
 
 .edit {
@@ -319,7 +328,6 @@ form input[type=password],
 form input[type=date],
 form input[type=submit],
 form textarea {
-    border: 2px solid #e1e1e1;
     font-size: 18px;
     line-height: 1.5em;
     padding:10px 13px;
@@ -378,9 +386,9 @@ input[name="tags-0-tag2"] {
 }
 
 .article_style {
+    background: snow;
     margin: .5rem auto;
     width: 65%;
-    border: 2px solid;
     padding: 1rem;
     border-radius: 10px;
     box-shadow: 0px 2px 2px silver;

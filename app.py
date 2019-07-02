@@ -115,10 +115,10 @@ class IndexView(View):
     def dispatch_request(self, tag=None):
 
         if not tag:
-            journal_entries = list(models.JournalEntry.select())
+            journal_entries = list(models.JournalEntry.select().order_by(models.JournalEntry.date.desc()))
         else:
             journal_entries = (
-                models.JournalEntry.select()
+                models.JournalEntry.select().order_by(models.JournalEntry.date.desc())
                 .join(models.JournalEntryTag)
                 .join(models.Tag)
                 .where(models.Tag.name == tag))
@@ -270,12 +270,30 @@ class EditJournalView(View):
             )
 
 app.add_url_rule(
-    '/entries/<slug>/edit',
+    '/entries/<id>/<slug>/edit',
     view_func=(EditJournalView.as_view(
          'edit',
          template='edit.html',
          form=forms.EditJournalEntryForm)),
     methods=['GET', 'POST'])
+
+
+class DeleteEntryView(View):
+
+    def dispatch_request(self, slug):
+
+        selected_entry = (
+            models.JournalEntry.get(models.JournalEntry.slug==slug))
+
+        selected_entry.delete_instance()
+        flash(f"Journal entry '{selected_entry.title}' has been deleted")
+        return redirect(url_for('home'))
+
+app.add_url_rule(
+    '/entries/<slug>/delete',
+    view_func=DeleteEntryView.as_view('delete'),
+    methods=['GET']
+    )
 
 
 class LogoutView(View):
