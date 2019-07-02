@@ -1,7 +1,10 @@
 
+import datetime
+
 import faker
 import unittest
 import models
+
 
 from flask import url_for
 from flask_login import current_user
@@ -44,12 +47,12 @@ class TestCaseConfig(unittest.TestCase):
     test_entry_data = {
         'title' : "Title",
         'slug' : "Slug",
-        'date' : "Date",
+        'date' : "2019-01-01",
         'time' : 10,
         'topic' : "Topic",
         'resources' : "Resource",
         'tags' : ['tag1', 'tag2'],
-        'writer_id' : test_writer['user_name']
+        'writer' : test_writer['user_name']
     }
 
     def writer_generator(self, num=1):

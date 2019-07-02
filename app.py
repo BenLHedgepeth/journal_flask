@@ -27,7 +27,7 @@ def user_loader(id):
 
 @login_manager.unauthorized_handler
 def unauthorized():
-    return render_template('login.html')
+    return redirect(url_for('login'))
 
 bcrypt = Bcrypt(app)
 
@@ -115,14 +115,23 @@ class IndexView(View):
     def dispatch_request(self, tag=None):
 
         if not tag:
-            journal_entries = models.JournalEntry.select()
+            journal_entries = list(models.JournalEntry.select())
         else:
             journal_entries = (
                 models.JournalEntry.select()
                 .join(models.JournalEntryTag)
                 .join(models.Tag)
                 .where(models.Tag.name == tag))
-        return render_template(self.template, journal_entries=journal_entries)
+
+        tagged_entries = []
+        for entry in journal_entries:
+                entry_tags = list(
+                     models.Tag.select()
+                     .join(models.JournalEntryTag)
+                     .join(models.JournalEntry)
+                     .where(models.JournalEntry.id == entry.id))
+                tagged_entries.append([entry, entry_tags])
+        return render_template(self.template, journal_entries=tagged_entries)
 
 app.add_url_rule(
     '/',

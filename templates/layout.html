@@ -13,11 +13,11 @@
         {% for category, message in messages %}
             {% if current_user.is_authenticated and category == 'success' %}
                 <div class="flash_wrapper">
-                    <p class="{{ category }} flash">{{ message }}</p>
+                    <p class="{{ category }}">{{ message }}</p>
                 </div>
             {% else %}
                 <div class="flash_wrapper">
-                    <p class="{{ category }} flash">{{ message }}</p>
+                    <p class="{{ category }}">{{ message }}</p>
                 </div>  
             {% endif %}
         {% endfor %}
@@ -28,11 +28,20 @@
             <div class="content entry-list">
                 {% for entry in journal_entries %}
                     <article class="article_style">
-                        <h2><a href="{{  url_for('entry', tag=entry.id, slug=entry.slug) }}">{{ entry.title }}</a></h2>
-                        <time datetime="{{ entry.date.strftime('%Y-%m-%d') }}">
-                            {{ entry.date.strftime("%B %d, %Y") }}
-                        </time>     
-                        <p>By:{{ entry.writer }}</p>
+                        <h2><a href="{{  url_for('entry', tag=entry[0].id, slug=entry[0].slug) }}">{{ entry[0].title }}</a></h2>
+                        <time datetime="{{ entry[0].date.strftime('%Y-%m-%d') }}">
+                            {{ entry[0].date.strftime("%B %d, %Y") }}
+                        </time>
+                        <p>By:{{ entry[0].writer }}</p>
+                        <div class="tag">
+                            Tags:
+                            <ul class="list main_tags">
+                            {% for tag in entry[1] %}
+                                <li class="tag_item"><a href="{{ url_for('tagged', tag=tag.name|lower) }}">{{ tag.name }}</a></li>
+                            {% endfor %}
+                            </ul>
+                        </div>
+
                     </article>
                 {% endfor %}
                 <a class="new_entry_button" href="{{ url_for('add_entry') }}">Add new a entry!</a>
@@ -45,11 +54,6 @@
             </p>
         {% endif %}
    {% else %}      
-<!--     {% with messages = get_flashed_messages(catedgo) %}
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-    {% endwith %}  -->
         <section class="content">
             <h1>Personal Learning Journal</h1>
             <h2>Expanding the minds of coders</h2>
