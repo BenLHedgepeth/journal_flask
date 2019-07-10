@@ -29,12 +29,12 @@
             <div class="content entry-list">
                 {% for entry in journal_entries %}
                     <article class="article_style">
-                        <h2><a class="title_style" href="{{  url_for('entry', tag=entry[0].id, slug=entry[0].slug) }}">{{ entry[0].title }}</a></h2>
+                        <h2><a class="title_style" href="{{  url_for('entry', slug=entry[0].slug) }}">{{ entry[0].title }}</a></h2>
                         <time datetime="{{ entry[0].date.strftime('%Y-%m-%d') }}">
                             {{ entry[0].date.strftime("%B %d, %Y") }}
                         </time>
                         <p>By:{{ entry[0].writer }}</p>
-                        <div class="tag">
+                         <div class="tag">
                             Tags:
                             <ul class="list main_tags">
                             {% for tag in entry[1] %}

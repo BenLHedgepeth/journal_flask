@@ -80,17 +80,13 @@ class JournalForm(FlaskForm):
 
 
 class EditJournalEntryForm(FlaskForm):
-    title = StringField(validators=[Optional()])
+    title = StringField(validators=[DataRequired(message="Title")])
 
-    time = IntegerField(validators=[Optional()])
+    time = IntegerField(validators=[DataRequired(message="Time")])
 
-    topic = TextAreaField(validators=[Optional()])
+    topic = TextAreaField(validators=[DataRequired(message="Topic")])
 
-    resources = TextAreaField(validators=[Optional()])
+    resources = TextAreaField(validators=[DataRequired(message="Resources")])
 
-    tags = FieldList(
-        FormField(TagForm),
-        validators=[Optional()],
-        min_entries=1)
 
     submit = SubmitField(label="Submit Entry")

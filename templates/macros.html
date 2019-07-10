@@ -2,7 +2,7 @@
     {% if not object %}
         {% set url_endpoint = url_for(endpoint) %}
     {% else %}
-        {% set url_endpoint = url_for('edit', slug=object.slug) %}
+        {% set url_endpoint = url_for('edit', id=object.id, slug=object.slug) %}
     {% endif %}
     <form action="{{ url_endpoint }}" method="post" class="{{ form_class }} form_layout">
         {{ form.csrf_token }}
@@ -20,14 +20,6 @@
     </form>
 {% endmacro %}
 
-
-{% macro edit_journal_entry(form, form_class, update=True) %}
-    <form action="{{ url_for('edit', slug=object.slug) }}" method="post" class="{{ form_class }} form_layout">
-        {{ form.csrf_token }}
-        {{ check_form_errors(form) }}
-        {{ render_field(field, object, field_class) }}
-    </form>
-{% endmacro %}
 
 
 {% macro check_form_errors(form) %} 
@@ -66,7 +58,7 @@
                 <div class="form_tag_div">
                 {% for input in field %}
                     {% for field in input %}
-                        {{ field(value=object|attr(input_field)) }} 
+                        {{ field(placeholder="Tag") }} 
                     {% endfor %}
                 {% endfor %}
                 </div>

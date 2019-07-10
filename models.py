@@ -5,7 +5,7 @@ from flask_login import UserMixin
 from flask_bcrypt import generate_password_hash
 from slugify import slugify
 
-database = SqliteDatabase(None)
+database = SqliteDatabase(None, pragmas={'foreign_keys': 1})
 
 
 class ModelConfig(Model):
@@ -77,14 +77,23 @@ class JournalEntry(ModelConfig):
     resources = TextField(null=True)
     writer = ForeignKeyField(model=Writer)
 
+    def __str__(self):
+        return self.title
+
 
 class Tag(ModelConfig):
     name = CharField(unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class JournalEntryTag(ModelConfig):
-    journal_entry = ForeignKeyField(model=JournalEntry)
-    journal_tag = ForeignKeyField(model=Tag)
+    journal_entry = ForeignKeyField(model=JournalEntry, on_delete="CASCADE")
+    journal_tag = ForeignKeyField(model=Tag, on_delete="CASCADE")
+
+    def __str__(self):
+        return f'{self.journal_entry} - {self.journal_tag}'
 
 
 def initialize_tables():

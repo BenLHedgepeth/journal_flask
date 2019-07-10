@@ -11,5 +11,5 @@
 
 {% block main_content %}
     <h2 class="headline_center">Edit Journal Entry</h2>
-    {{ render_form(form, 'edit', 'login_layout', object=entry) }}
+    {{ render_form(form, 'edit', 'login_layout', field_class="edit_field", object=entry) }}
 {% endblock %}

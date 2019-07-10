@@ -425,13 +425,6 @@ input[name="tags-0-tag2"] {
     flex-direction: column;
 }
 
-/*.flash {
-    position: absolute;
-    top: 0;
-    display: inline-block;
- 
-}
-*/
 
 .flash_wrapper {
     position: absolute;
@@ -447,6 +440,12 @@ input[name="tags-0-tag2"] {
     list-style: none;
     padding: 0;
     margin: 0;
+}
+
+
+input[type="text"][name="title"] {
+    pointer-events: none;
+    background: lightgrey;
 }
 
 .field_errors li {

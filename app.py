@@ -1,6 +1,6 @@
 
 from flask import (Flask, render_template, g, flash,
-                   url_for, redirect, current_app, request)
+                   url_for, redirect, current_app, request, abort)
 from flask.views import View
 from flask_login import (LoginManager, login_user, logout_user,
                          login_required, current_user)
@@ -115,13 +115,18 @@ class IndexView(View):
     def dispatch_request(self, tag=None):
 
         if not tag:
-            journal_entries = list(models.JournalEntry.select().order_by(models.JournalEntry.date.desc()))
-        else:
             journal_entries = (
-                models.JournalEntry.select().order_by(models.JournalEntry.date.desc())
+                models.JournalEntry.select()
+                .order_by(models.JournalEntry.date.desc()))
+        else:
+
+            journal_entries = (
+                models.JournalEntry.select()
                 .join(models.JournalEntryTag)
                 .join(models.Tag)
-                .where(models.Tag.name == tag))
+                .where(models.Tag.name == tag)
+                .order_by(models.JournalEntry.date.desc()))
+                
 
         tagged_entries = []
         for entry in journal_entries:
@@ -149,7 +154,7 @@ app.add_url_rule(
      methods=['GET'])
 
 app.add_url_rule(
-    '/entries/<tag>',
+    '/search/<tag>',
     view_func=IndexView.as_view(
         'tagged',
         template='layout.html'
@@ -176,7 +181,7 @@ class NewJournalEntryView(View):
                 redirect(url_for('add_entry'))
             else:
                 new_entry = models.JournalEntry.get(
-                    models.JournalEntry.title == entry.title.data
+                    models.JournalEntry.title == entry.title.data # Journal Entry to create 
                  )
 
                 """Using a FieldList for the JournalForm 'tags' class
@@ -190,16 +195,21 @@ class NewJournalEntryView(View):
 
                 """entry.tags.data[0] refers to this
                    dictionary as described above"""
+                tags = []
+                print(entry.tags.data)
                 for tag_name, value in entry.tags.data[0].items():
+
                     tag_value = value.lower()
-                    if tag_name != " " and tag_name != "csrf_token":
+                    if tag_name != "csrf_token":
                         tag, created = models.Tag.get_or_create(
                             name=tag_value
-                        )
+                        )                     
+                        tags.append(tag)                   
 
                         models.JournalEntryTag.create(
                             journal_entry=new_entry,
-                            journal_tag=tag
+                            journal_tag=tag,
+
                          )
                 flash("Your journal entry has been saved!")
                 return redirect(url_for("home"))
@@ -220,12 +230,11 @@ class JournalEntryDetailView(View):
         self.template = template
 
     @login_required
-    def dispatch_request(self, tag, slug):
+    def dispatch_request(self, slug):
         journal_data = current_user.retrieve_entry(slug)
         if not journal_data:
-            return "Hello"
+            abort(404)
         else:
-
             tags = journal_data[1]
             return render_template(
                 'detail.html',
@@ -235,7 +244,7 @@ class JournalEntryDetailView(View):
 
 
 app.add_url_rule(
-    '/entries/<tag>/<slug>',
+    '/entries/<slug>',
     view_func=(JournalEntryDetailView.as_view(
          'entry',
          template='detail.html')),
@@ -270,7 +279,7 @@ class EditJournalView(View):
             )
 
 app.add_url_rule(
-    '/entries/<id>/<slug>/edit',
+    '/entries/<slug>/edit',
     view_func=(EditJournalView.as_view(
          'edit',
          template='edit.html',
@@ -284,6 +293,7 @@ class DeleteEntryView(View):
 
         selected_entry = (
             models.JournalEntry.get(models.JournalEntry.slug==slug))
+
 
         selected_entry.delete_instance()
         flash(f"Journal entry '{selected_entry.title}' has been deleted")
