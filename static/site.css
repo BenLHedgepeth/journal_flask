@@ -46,6 +46,8 @@ body {
     padding: 0 25px;
 }
 header .site-header {
+    position: relative;
+    z-index: 1;
     margin: 0 auto;
     height: 95px;
 }
@@ -443,7 +445,7 @@ input[name="tags-0-tag2"] {
 }
 
 
-input[type="text"][name="title"] {
+.edit_field:nth-child(2) {
     pointer-events: none;
     background: lightgrey;
 }
