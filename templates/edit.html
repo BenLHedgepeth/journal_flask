@@ -11,5 +11,14 @@
 
 {% block main_content %}
     <h2 class="headline_center">Edit Journal Entry</h2>
+    {% with messages = get_flashed_messages() %}
+    	{% if messages %}
+    		<ul class='field_errors'>
+    		{% for message in messages %}
+    			<li>{{ message }}</li>
+    		{% endfor %}
+    		</ul>
+    	{% endif %}
+    {% endwith %}
     {{ render_form(form, 'edit', 'login_layout', field_class="edit_field", object=entry) }}
 {% endblock %}

@@ -262,14 +262,20 @@ class EditJournalView(View):
         writer_entry = current_user.retrieve_entry(slug)
         edit_journal_entry = self.form()
 
+
         if edit_journal_entry.validate_on_submit():
-            writer_entry[0].title = request.form['title']
-            writer_entry[0].time = request.form['time']
-            writer_entry[0].topic = request.form['topic']
-            writer_entry[0].resources = request.form['resources']
-            writer_entry[0].save()
-            flash("Journal entry updated!")
-            return redirect(url_for('home'))
+            try:
+                writer_entry[0].title = request.form['title']
+                writer_entry[0].time = request.form['time']
+                writer_entry[0].topic = request.form['topic']
+                writer_entry[0].resources = request.form['resources']
+                writer_entry[0].save()
+            except models.IntegrityError:
+                flash("An entry exists with that title. Please be more specific.")
+                return redirect(url_for('edit', slug=slug))
+            else:
+                flash("Journal entry updated!")
+                return redirect(url_for('home'))
 
         return render_template(
             self.template,

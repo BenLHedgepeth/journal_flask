@@ -445,11 +445,6 @@ input[name="tags-0-tag2"] {
 }
 
 
-.edit_field:nth-child(2) {
-    pointer-events: none;
-    background: lightgrey;
-}
-
 .field_errors li {
     text-align: center;
 }
